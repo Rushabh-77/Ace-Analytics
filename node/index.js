@@ -2,8 +2,13 @@ const config = require("./config/config.js");
 const express = require("express");
 const cors = require("cors");
 const sequelize = require("./config/db.js");
+const userRoutes = require('./routes/userRoutes.js');
+const errorHandler = require("./middleware/errorMiddleware.js");
 
 const app = express();
+
+app.use(cors())
+app.use(express.json());
 
 // Sync the database
 sequelize.sync({ alter: false })
@@ -15,8 +20,13 @@ sequelize.sync({ alter: false })
     });
 
 
-app.use(cors())
-app.use(express.json());
+//models
+require("./models/user.js")
+
+//routes
+app.use('/user', userRoutes);
+
+app.use(errorHandler);
 
 const PORT = config.PORT || 5000;
 
